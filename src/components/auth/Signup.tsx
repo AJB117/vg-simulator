@@ -1,12 +1,13 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
+import { Formik, Form, ErrorMessage, FormikHelpers } from "formik";
 import * as yup from "yup";
 import Button from "@material-ui/core/Button";
 import { RouteComponentProps } from "react-router-dom";
 import { firebaseApp, db } from "../../firebase";
 import SignupSchema from "./util/SignupSchema";
 import validateUsername from "./util/validateUsername";
-import { ButtonGroup } from "@material-ui/core";
+import { ButtonGroup, TextField } from "@material-ui/core";
+import "./auth.css";
 
 const Signup: React.FC<RouteComponentProps> = ({ history }) => {
   type SignupData = yup.InferType<typeof SignupSchema>;
@@ -48,75 +49,83 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
         validationSchema={SignupSchema}
         onSubmit={async (data, actions) => await handleSignup(data, actions)}
       >
-        {({ isSubmitting }) => (
-          <div className="parentForm">
-            <Form>
-              <div className="loginSignupText">Sign Up</div>
-              <div>
-                <Field
-                  type="input"
-                  name="username"
-                  className="form-control"
-                  placeholder="username"
-                />
-                <ErrorMessage name="username">
-                  {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-                </ErrorMessage>
-              </div>
+        {({ isSubmitting, values, handleChange, touched, errors }) => (
+          <Form className="parentForm">
+            <div className="loginSignupText">Sign Up</div>
+            <div>
+              <TextField
+                id="username"
+                name="username"
+                label="Username"
+                value={values.username}
+                onChange={handleChange}
+                error={touched.username && Boolean(errors.username)}
+                helperText={touched.username && errors.username}
+              />
+              <ErrorMessage name="username">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
+            </div>
 
-              <div>
-                <Field
-                  type="input"
-                  name="email"
-                  className="form-control"
-                  placeholder="email"
-                />
-                <ErrorMessage name="email">
-                  {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-                </ErrorMessage>
-              </div>
+            <div>
+              <TextField
+                id="email"
+                name="email"
+                label="Email"
+                value={values.email}
+                onChange={handleChange}
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
+              />
+              <ErrorMessage name="email">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
+            </div>
 
-              <div>
-                <Field
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  placeholder="password"
-                />
-                <ErrorMessage name="password">
-                  {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-                </ErrorMessage>
-              </div>
+            <div>
+              <TextField
+                id="password"
+                name="password"
+                label="Password"
+                type="password"
+                value={values.password}
+                onChange={handleChange}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
+              />
+              <ErrorMessage name="password">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
+            </div>
 
-              <ButtonGroup>
-                <Button
-                  className="left-btn"
-                  variant="contained"
-                  color="primary"
-                  disabled={isSubmitting}
-                  type="submit"
-                >
-                  Submit
-                </Button>{" "}
-                <Button
-                  className="right-btn"
-                  variant="contained"
-                  color="primary"
-                  onClick={() => history.push("/login")}
-                >
-                  Log In
-                </Button>{" "}
-                <Button
-                  className="back-btn"
-                  color="secondary"
-                  variant="contained"
-                  onClick={history.goBack}
-                >
-                  Back
-                </Button>
-              </ButtonGroup>
-            </Form>
-          </div>
+            <ButtonGroup className="buttonGroup">
+              <Button
+                className="left-btn"
+                variant="contained"
+                color="primary"
+                disabled={isSubmitting}
+                type="submit"
+              >
+                Submit
+              </Button>{" "}
+              <Button
+                className="right-btn"
+                variant="contained"
+                color="primary"
+                onClick={() => history.push("/login")}
+              >
+                Log In
+              </Button>{" "}
+              <Button
+                className="back-btn"
+                color="secondary"
+                variant="contained"
+                onClick={() => history.push("/")}
+              >
+                Back
+              </Button>
+            </ButtonGroup>
+          </Form>
         )}
       </Formik>
     </div>
