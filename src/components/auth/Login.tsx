@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import * as yup from "yup";
 import { firebaseApp } from "../../firebase";
@@ -7,10 +7,12 @@ import Button from "@material-ui/core/Button";
 import LoginSchema from "./util/LoginSchema";
 import "./auth.css";
 import { ButtonGroup, TextField } from "@material-ui/core";
+import UserContext from "../../UserContext";
 
 type LoginData = yup.InferType<typeof LoginSchema>;
 
 const Login: React.FC<RouteComponentProps> = ({ history }) => {
+  const userContext = useContext(UserContext);
   const handleLogin = async (data: LoginData) => {
     console.log(data);
     if (!data) return;
@@ -21,6 +23,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
       .then((res) => {
         console.log("signed in!");
         sessionStorage.removeItem("decks");
+        userContext.isLoggedIn = true;
         history.push("/menu");
       })
       .catch((error) => {
@@ -76,7 +79,6 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
 
           <ButtonGroup className="buttonGroup">
             <Button
-              className="left-btn"
               disabled={isSubmitting}
               color="primary"
               variant="contained"
@@ -85,15 +87,13 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
               Submit
             </Button>
             <Button
-              className="right-btn"
               color="primary"
               variant="contained"
-              onClick={() => history.push("/signup")}
+              onClick={() => history.replace("/signup")}
             >
               Sign Up
             </Button>
             <Button
-              className="back-btn"
               color="secondary"
               variant="contained"
               onClick={() => history.push("/")}

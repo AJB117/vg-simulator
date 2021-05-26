@@ -100,7 +100,6 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
 
             <ButtonGroup className="buttonGroup">
               <Button
-                className="left-btn"
                 variant="contained"
                 color="primary"
                 disabled={isSubmitting}
@@ -109,7 +108,6 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
                 Submit
               </Button>{" "}
               <Button
-                className="right-btn"
                 variant="contained"
                 color="primary"
                 onClick={() => history.push("/login")}
@@ -117,7 +115,6 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
                 Log In
               </Button>{" "}
               <Button
-                className="back-btn"
                 color="secondary"
                 variant="contained"
                 onClick={() => history.push("/")}
