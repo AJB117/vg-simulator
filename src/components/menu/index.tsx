@@ -1,24 +1,29 @@
 import { Tab, Tabs } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
-import React, { useContext, useEffect } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Link,
+  Route,
+  RouteComponentProps,
+  Switch,
+} from "react-router-dom";
 import { firebaseApp } from "../../firebase";
 import Thing from "../../thing";
-import UserContext from "../../UserContext";
+import isLoggedIn from "../auth/util/isLoggedIn";
 
-const Menu: React.FC<RouteComponentProps> = ({ history }) => {
-  const userContext = useContext(UserContext);
+const Menu: React.FC<RouteComponentProps> = ({ history, match }) => {
   useEffect(() => {
-    if (firebaseApp.auth().currentUser) {
-      return;
-    }
-    userContext.isLoggedIn = false;
-    history.replace("/");
-  }, [userContext, history]);
+    firebaseApp.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        history.replace("/");
+        localStorage.removeItem("user");
+      }
+    });
+  }, []);
 
   const handleGoBack = () => {
-    if (userContext.isLoggedIn) {
-      history.replace("/menu");
+    if (isLoggedIn()) {
       return;
     }
     history.goBack();
@@ -27,16 +32,23 @@ const Menu: React.FC<RouteComponentProps> = ({ history }) => {
     <div>
       <AppBar position="static">
         <Tabs>
-          {/* <BrowserRouter> */}
           <Tab label="Deck Builder"></Tab>
           <Tab label="Play"></Tab>
           <Tab label="Profile"></Tab>
-          <Tab label={userContext.username}></Tab>
-          {/* </BrowserRouter> */}
+          <Tab
+            label={
+              JSON.parse(localStorage.getItem("user") || "{username: ''}")
+                .username
+            }
+          ></Tab>
         </Tabs>
         <button onClick={handleGoBack}>Back</button>
       </AppBar>
-      Hi menu
+      <Router>
+        <Switch>
+          <Route path={match.url + "/silly"} component={Thing} exact />
+        </Switch>
+      </Router>
     </div>
   );
 };

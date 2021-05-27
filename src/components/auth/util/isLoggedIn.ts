@@ -1,10 +1,10 @@
 import { firebaseApp } from "../../../firebase";
 
 const isLoggedIn = () => {
-  if (firebaseApp.auth().currentUser) {
-    return true;
-  }
-  return false;
+  firebaseApp.auth().onAuthStateChanged((user) => {
+    if (!user) return false;
+  });
+  return true;
 };
 
 export default isLoggedIn;

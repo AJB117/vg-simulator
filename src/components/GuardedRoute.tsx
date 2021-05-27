@@ -5,6 +5,7 @@ const GuardedRoute = ({ ...routerProps }: RouteProps) => {
   if (isLoggedIn()) {
     return <Route {...routerProps} />;
   }
+  localStorage.removeItem("user");
   return <Redirect to="/" />;
 };
 

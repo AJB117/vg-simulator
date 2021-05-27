@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import * as yup from "yup";
 import { firebaseApp, db } from "../../firebase";
@@ -7,12 +7,10 @@ import Button from "@material-ui/core/Button";
 import LoginSchema from "./util/LoginSchema";
 import "./auth.css";
 import { ButtonGroup, TextField } from "@material-ui/core";
-import UserContext from "../../UserContext";
 
 type LoginData = yup.InferType<typeof LoginSchema>;
 
 const Login: React.FC<RouteComponentProps> = ({ history }) => {
-  const userContext = useContext(UserContext);
   const handleLogin = async (data: LoginData) => {
     if (!data) return;
     console.log("logging in..");
@@ -22,10 +20,15 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
       .then(async (res) => {
         console.log("signed in!");
         sessionStorage.removeItem("decks");
-        userContext.isLoggedIn = true;
         const user = db.collection("users").doc(res.user?.uid);
         const doc = await user.get();
-        userContext.username = doc.data()!["username"];
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            isLoggedIn: true,
+            username: doc.data()!["username"],
+          })
+        );
         history.push("/menu");
       })
       .catch((error) => {
