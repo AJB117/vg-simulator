@@ -1,4 +1,4 @@
-import { db } from "../../../firebase";
+import { firebaseApp, db } from "../../../firebase";
 import firebase from "firebase";
 
 const getUsers = async (): Promise<

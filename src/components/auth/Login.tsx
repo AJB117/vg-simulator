@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import * as yup from "yup";
-import { firebaseApp } from "../../firebase";
+import { firebaseApp, db } from "../../firebase";
 import { ErrorMessage, Form, Formik } from "formik";
 import Button from "@material-ui/core/Button";
 import LoginSchema from "./util/LoginSchema";
@@ -14,16 +14,18 @@ type LoginData = yup.InferType<typeof LoginSchema>;
 const Login: React.FC<RouteComponentProps> = ({ history }) => {
   const userContext = useContext(UserContext);
   const handleLogin = async (data: LoginData) => {
-    console.log(data);
     if (!data) return;
     console.log("logging in..");
     firebaseApp
       .auth()
       .signInWithEmailAndPassword(data.email, data.password)
-      .then((res) => {
+      .then(async (res) => {
         console.log("signed in!");
         sessionStorage.removeItem("decks");
         userContext.isLoggedIn = true;
+        const user = db.collection("users").doc(res.user?.uid);
+        const doc = await user.get();
+        userContext.username = doc.data()!["username"];
         history.push("/menu");
       })
       .catch((error) => {
@@ -48,6 +50,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
           <div className="loginSignupText">Log In</div>
           <div>
             <TextField
+              fullWidth
               id="email"
               name="email"
               label="Email"
@@ -63,6 +66,7 @@ const Login: React.FC<RouteComponentProps> = ({ history }) => {
 
           <div>
             <TextField
+              fullWidth
               id="password"
               name="password"
               label="Password"

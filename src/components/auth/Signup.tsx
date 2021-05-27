@@ -54,6 +54,7 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
             <div className="loginSignupText">Sign Up</div>
             <div>
               <TextField
+                fullWidth
                 id="username"
                 name="username"
                 label="Username"
@@ -69,6 +70,7 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
 
             <div>
               <TextField
+                fullWidth
                 id="email"
                 name="email"
                 label="Email"
@@ -84,6 +86,7 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
 
             <div>
               <TextField
+                fullWidth
                 id="password"
                 name="password"
                 label="Password"
@@ -106,14 +109,14 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
                 type="submit"
               >
                 Submit
-              </Button>{" "}
+              </Button>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={() => history.push("/login")}
               >
                 Log In
-              </Button>{" "}
+              </Button>
               <Button
                 color="secondary"
                 variant="contained"
