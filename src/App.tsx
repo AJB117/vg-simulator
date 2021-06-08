@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
 import GuardedRoute from "./components/GuardedRoute";
@@ -7,7 +7,7 @@ import Menu from "./components/menu/index";
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/login" exact component={Login} />
@@ -15,7 +15,7 @@ function App() {
         <GuardedRoute path="/menu" exact component={Menu} />
         {/* <Route path="/" render={() => <div>404</div>} /> */}
       </Switch>
-    </BrowserRouter>
+    </Router>
   );
 }
 
